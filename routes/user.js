@@ -56,5 +56,20 @@ router.post('/login',function(req,res){
 	}
 	});
 });
+//3.检索用户
+router.get('/detail',function(req,res){
+	//3.1获取数据
+var obj=req.query;
+	//3.2验证数据是否为空
+if(!obj.uid){
+res.send({code:401,msg:'uid required'});
+return;
+}
+	//3.3执行SQL语句
+	pool.query('SELECT * FROM xz_user WHERE uid=?',[obj.uid],function(err,result){
+if(err) throw err;
+res.send(result);
+});
+});
 //导出路由器对象
 module.exports=router;

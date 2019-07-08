@@ -71,5 +71,37 @@ if(err) throw err;
 res.send(result);
 });
 });
+//4.修改用户
+router.post('/update',function(req,res){
+	//4.1获取数据
+	var obj=req.body;
+	//4.2验证数据是否为空
+	//遍历对象,访问每个属性
+	var i=400;
+	for(var key in obj){
+		i++;
+		//console.log(key,obj[key]);
+		//如果属性值为空,提示属性名必须
+		if(!obj[key]){
+			res.send({code:i,msg:key+' required'});
+			return;
+		}
+	}
+	//4.3执行SQL语句
+	//取出用户编号
+	var uid=obj.uid;
+	//删除对象中的编号属性
+	delete obj.uid;
+	console.log(obj);
+	pool.query('UPDATE xz_user SET ? WHERE uid=?',[obj,uid],function(err,result){
+		if(err) throw err;
+		//console.log(result);
+		//判断是否修改成功
+		if(result.affectedRows>0){
+			res.send({code:200,msg:'update suc'});
+			}else{res.send({code:201,msg:'update filed'});
+		}
+	});
+});
 //导出路由器对象
 module.exports=router;

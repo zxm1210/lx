@@ -103,5 +103,30 @@ router.post('/update',function(req,res){
 		}
 	});
 });
+//5.用户列表
+router.get('/list',function(req,res){
+  //5.1获取数据
+  var obj=req.query;
+  console.log(obj);
+  //5.2验证为空，设置默认值
+  var count=obj.count;
+  var pno=obj.pno;
+  if(!count){
+    count=2;
+  }
+  if(!pno){
+    pno=1;
+  }
+  //5.3转整型
+  count=parseInt(count);
+  pno=parseInt(pno);
+  //5.4计算开始
+  var start=(pno-1)*count;
+  //5.5执行SQL语句
+  pool.query('SELECT * FROM xz_user LIMIT ?,?',[start,count],function(err,result){
+    if(err) throw err;
+    res.send(result);
+  });
+});
 //导出路由器对象
 module.exports=router;

@@ -128,5 +128,29 @@ router.get('/list',function(req,res){
     res.send(result);
   });
 });
+//6.删除用户
+router.get('/delete',function(req,res){
+  //6.1获取数据
+  var obj=req.query;
+  //console.log(obj);
+  //6.2是否为空
+  if(!obj.uid){
+    res.send({code:401,msg:'uid required'});
+	return;
+  }
+  //6.3执行SQL语句
+  pool.query('DELETE FROM xz_user WHERE uid=?',[obj.uid],function(err,result){
+	if(err) throw err;
+	//console.log(result);
+	//判断是否删除成功
+	if(result.affectedRows>0){
+	  res.send({code:200,msg:'del suc'});
+	}else{
+	  res.send({code:201,msg:'del err'});
+	}
+  });
+
+});
+
 //导出路由器对象
 module.exports=router;
